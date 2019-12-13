@@ -46,10 +46,10 @@ struct TestSummary: HTML
         return status
     }
 
-    init(summary: ActionTestableSummary, file: ResultFile) {
+    init(summary: ActionTestableSummary, file: ResultFile, configuration: Configuration) {
         self.uuid = UUID().uuidString
         self.testName = summary.targetName ?? ""
-        self.tests = summary.tests.map { Test(group: $0, file: file) }
+        self.tests = summary.tests.map { Test(group: $0, file: file, configuration: configuration) }
     }
 
     // PRAGMA MARK: - HTML

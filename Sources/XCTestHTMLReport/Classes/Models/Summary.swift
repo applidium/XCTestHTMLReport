@@ -13,7 +13,7 @@ struct Summary
 {
     let runs: [Run]
 
-    init(resultPaths: [String]) {
+    init(resultPaths: [String], configuration: Configuration) {
         var runs: [Run] = []
         for resultPath in resultPaths {
             Logger.step("Parsing \(resultPath)")
@@ -24,7 +24,7 @@ struct Summary
                 break
             }
             let resultRuns = invocationRecord.actions.compactMap {
-                Run(action: $0, file: resultFile)
+                Run(action: $0, file: resultFile, configuration: configuration)
             }
             runs.append(contentsOf: resultRuns)
         }

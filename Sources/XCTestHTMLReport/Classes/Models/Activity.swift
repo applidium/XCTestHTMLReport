@@ -74,17 +74,17 @@ struct Activity: HTML
         return attachments.filter { $0.isImage }
     }
 
-    init(summary: ActionTestActivitySummary, file: ResultFile, padding: Int = 0) {
+    init(summary: ActionTestActivitySummary, file: ResultFile, padding: Int = 0, configuration: Configuration) {
         self.uuid = summary.uuid
         self.startTime = summary.start?.timeIntervalSince1970 ?? 0
         self.finishTime = summary.finish?.timeIntervalSince1970 ?? 0
         self.title = summary.title
         self.subActivities = summary.subactivities.map {
-            Activity(summary: $0, file: file, padding: padding + 10)
+            Activity(summary: $0, file: file, padding: padding + 10, configuration: configuration)
         }
         self.type = ActivityType(rawValue: summary.activityType)
         self.attachments = summary.attachments.map {
-            Attachment(attachment: $0, file: file, padding: padding + 16)
+            Attachment(attachment: $0, file: file, padding: padding + 16, configuration: configuration)
         }
         self.padding = padding
     }

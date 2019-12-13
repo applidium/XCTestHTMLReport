@@ -22,7 +22,7 @@ struct DesignReviewScreenshot: HTML
 
     var htmlPlaceholderValues: [String: String] {
         return [
-            "PATH": attachment.path,
+            "SOURCE": attachment.source ?? "",
             "FILENAME": attachment.filename,
             "NAME": attachment.displayName
         ]

@@ -5,7 +5,7 @@ struct HTMLTemplates
 {
     static let designReviewScreenshot = """
   <p class=\"design_review_item list-item\">
-      <img class=\"design_review_screenshot\" src=\"[[PATH]]\" id=\"screenshot-[[FILENAME]]\" style=\"margin-bottom: 4px\" />
+      <img class=\"design_review_screenshot\" src=\"[[SOURCE]]\" id=\"screenshot-[[FILENAME]]\" style=\"margin-bottom: 4px\" />
       [[NAME]]
   </p>
   """
@@ -31,7 +31,7 @@ struct HTMLTemplates
   <p class=\"attachment list-item\">
     <span class=\"icon left text-icon\" style=\"margin-left: [[PADDING]]px\"></span>
     [[NAME]]
-    <span class=\"icon preview-icon\" data=\"[[PATH]]\" onclick=\"showText('[[PATH]]')\"></span>
+    <span class=\"icon preview-icon\" data=\"[[SOURCE]]\" onclick=\"showText('[[SOURCE]]')\"></span>
   </p>
   """
 
@@ -58,7 +58,7 @@ struct HTMLTemplates
           <li onclick=\"showApplicationLogs(this);\">App Logs</li>
         </ul>
       </div>
-      <iframe id=\"test-logs-iframe\" src=\"[[LOG_PATH]]\"></iframe>
+      <iframe id=\"test-logs-iframe\" src=\"[[LOG_SOURCE]]\"></iframe>
     </div>
     <div id=\"design-review\">
         <div>
@@ -1093,7 +1093,7 @@ struct HTMLTemplates
     <span class=\"icon left screenshot-icon\" style=\"margin-left: [[PADDING]]px\"></span>
     [[NAME]]
     <span class=\"icon preview-icon\" data=\"[[FILENAME]]\" onclick=\"showScreenshot('[[FILENAME]]')\"></span>
-    <img class=\"screenshot\" src=\"[[PATH]]\" id=\"screenshot-[[FILENAME]]\"/>
+    <img class=\"screenshot\" src=\"[[SOURCE]]\" id=\"screenshot-[[FILENAME]]\"/>
   </p>
   """
 

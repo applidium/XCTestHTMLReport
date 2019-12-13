@@ -14,7 +14,7 @@ struct Run: HTML
     let runDestination: RunDestination
     let testSummaries: [TestSummary]
     let designReviews: [DesignReview]
-    let logPath: String
+    let logContent: RenderingContent
     var status: Status {
        return testSummaries.reduce(true, { (accumulator: Bool, summary: TestSummary) -> Bool in
             return accumulator && summary.status == .success
@@ -39,7 +39,7 @@ struct Run: HTML
         return allTests.filter { $0.status == .failure }.count
     }
 
-    init?(action: ActionRecord, file: ResultFile) {
+    init?(action: ActionRecord, file: ResultFile, configuration: Configuration) {
         self.runDestination = RunDestination(record: action.runDestination)
 
         guard
@@ -51,17 +51,30 @@ struct Run: HTML
 
         // TODO: (Pierre Felgines) 02/10/2019 Use only emittedOutput from logs objects
         // For now XCResultKit do not handle logs
-        if let logReference = action.actionResult.logRef,
-            let url = file.exportLogs(id: logReference.id) {
-            self.logPath = url.relativePath
+        if let logReference = action.actionResult.logRef {
+            self.logContent = file.exportLogsContent(
+                id: logReference.id,
+                renderingMode: renderingMode
+            )
         } else {
             Logger.warning("Can't find test reference for action \(action.title ?? "")")
-            self.logPath = ""
+            self.logContent = .none
         }
         self.testSummaries = testPlanSummaries.summaries
             .flatMap { $0.testableSummaries }
-            .map { TestSummary(summary: $0, file: file) }
+            .map { TestSummary(summary: $0, file: file, configuration: configuration) }
         self.designReviews = testSummaries.map(DesignReview.init)
+    }
+
+    private var logSource: String? {
+        switch logContent {
+        case let .url(url):
+            return url.relativePath
+        case let .data(data):
+            return "data:text/plain;base64,\(data.base64EncodedString())"
+        case .none:
+            return nil
+        }
     }
 
     // PRAGMA MARK: - HTML
@@ -71,7 +84,7 @@ struct Run: HTML
     var htmlPlaceholderValues: [String: String] {
         return [
             "DEVICE_IDENTIFIER": runDestination.targetDevice.uniqueIdentifier,
-            "LOG_PATH": logPath,
+            "LOG_SOURCE": logSource ?? "",
             "N_OF_TESTS": String(numberOfTests),
             "N_OF_PASSED_TESTS": String(numberOfPassedTests),
             "N_OF_FAILED_TESTS": String(numberOfFailedTests),
